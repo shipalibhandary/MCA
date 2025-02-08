@@ -1,0 +1,99 @@
+// Web application to illustrate cookies in JSP
+
+
+Page 1: setCookie.jsp 
+
+<%@ page language="java" contentType="text/html; %> 
+<%@ page import="javax.servlet.http.Cookie" %> 
+<html> 
+    <head> 
+        <title>Set Cookie Example</title> 
+    </head> 
+    <body> 
+        <h1>Welcome to the Cookie Example - Set Cookie</h1> 
+            <% 
+                // Check if the user is already visiting and has a cookie       
+                Cookie[] cookies = request.getCookies();        
+                boolean hasCookie = false; 
+                if (cookies != null) 
+                {          
+                    for (Cookie cookie : cookies) 
+                    {             
+                        if ("userName".equals(cookie.getName())) 
+                        {           
+                            hasCookie = true;                   
+                            break; 
+                        } 
+                    } 
+                }
+                if (hasCookie) 
+                {             
+                      out.println("<p>You already have a cookie. Go to the next page to see the greeting.</p>"); 
+                } 
+                else 
+                { 
+            %> 
+            <form method="post" action="setCookie.jsp"> 
+                <label for="name">Enter Your Name:</label> 
+                    <input type="text" id="name" name="name" required> 
+                <input type="submit" value="Submit"> 
+            </form> 
+            <% 
+                } 
+                // Handle form submission to set a cookie 
+                if (request.getMethod().equalsIgnoreCase("POST")) 
+                { 
+                    String name = request.getParameter("name"); 
+                    if (name != null && !name.isEmpty()) 
+                    { 
+                        // Create a new cookie to store the user's name 
+                        Cookie userNameCookie = new Cookie("userName", name); 
+                        // Set the cookie's maximum age to 1 year (365 days)         
+                        userNameCookie.setMaxAge(60 * 60 * 24 * 365);  
+                        // Add the cookie to the response                 
+                        response.addCookie(userNameCookie); 
+                        out.println("<p>Cookie has been set! <a href='getCookie.jsp'>Go to the next page to see your greeting.</a></p>"); 
+                    } 
+                } 
+            %> 
+    </body> 
+</html> 
+
+
+Page 2: getCookie.jsp 
+
+<%@ page language="java" contentType="text/html; %> 
+<%@ page import="javax.servlet.http.Cookie" %> 
+<html> 
+    <head> 
+        <title>Get Cookie Example</title> 
+    </head> 
+    <body> 
+        <h1>Welcome to the Cookie Example - Get Cookie</h1> 
+        <% 
+            // Retrieve cookies 
+            Cookie[] cookies = request.getCookies(); 
+            String userName = null; 
+            if (cookies != null) 
+            {         
+                for (Cookie cookie : cookies) 
+                { 
+                    if ("userName".equals(cookie.getName())) 
+                    {   
+                          userName = cookie.getValue(); // Get user's name from cookie            
+                          break; 
+                    } 
+                } 
+            } 
+            if (userName != null) 
+            {          
+                out.println("<h2>Hello, " + userName + "!</h2>"); 
+                out.println("<p>Welcome back to our site!</p>"); 
+            } 
+            else 
+            { 
+                out.println("<p>No cookie found. Please go back and enter your name first.</p>"); 
+            } 
+        %> 
+    </body> 
+</html>
