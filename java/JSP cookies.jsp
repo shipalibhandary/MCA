@@ -1,7 +1,5 @@
 // Web application to illustrate cookies in JSP
-
-
-Page 1: setCookie.jsp 
+//Page 1: setCookie.jsp 
 
 <%@ page language="java" contentType="text/html; %> 
 <%@ page import="javax.servlet.http.Cookie" %> 
